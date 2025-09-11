@@ -2,6 +2,10 @@ import socket
 import struct
 import textwrap
 
+#listening for packets Loop
+def main():
+    conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
+
 #unpack Ethernet frame
 def ethernet_frame(data):
     dest_mac, src_mac, proto = struct.unpack('! 6s 6s H', data[:14])
