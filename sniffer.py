@@ -3,6 +3,7 @@ import struct
 import textwrap
 
 #biggest buffer size: 65535
+#65535 (0xFFFF) is the largest possible value that fits in an unsigned 16-bit integer.
 
 #listening for packets Loop
 def main():
@@ -11,7 +12,9 @@ def main():
 
     while True:
         raw_data, addr = conn.recvfrom(BUFFER_SIZE)
-        
+        dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
+        print('\nEthernet Frame: ')
+        print('Dest: {} src: {} proto: {}'.format(dest_mac,src_mac,eth_proto))
 
 #unpack Ethernet frame
 def ethernet_frame(data):
