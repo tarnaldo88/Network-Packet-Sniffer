@@ -7,8 +7,13 @@ import textwrap
 
 #listening for packets Loop
 def main():
-    conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
+    HOST = socket.gethostbyname(socket.gethostname())
+    conn = socket.socket(socket.AF_INET, socket.SOCK_RAW)
+    conn.bind((HOST, 0))
+    conn.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
+    #conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
     BUFFER_SIZE = 65535
+    print('Testing\n')
 
     while True:
         raw_data, addr = conn.recvfrom(BUFFER_SIZE)
@@ -25,7 +30,7 @@ def ethernet_frame(data):
 def get_mac_addr(bytes_addr):    
     bytes_str = map('{:02x}'.format, bytes_addr)
     #joins the pieces made in map above, and then uppercases them
-    return ':'.join(bytes_addr).upper()
+    return ':'.join(bytes_str).upper()
 
 
 main()
