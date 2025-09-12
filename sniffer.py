@@ -2,6 +2,18 @@ import socket
 import struct
 import textwrap
 
+BUFFER_SIZE = 65535
+TAB_1 = '\t - '
+TAB_2 = '\t\t - '
+TAB_3 = '\t\t\t - '
+TAB_4 = '\t\t\t\t - '
+
+DATA_TAB_1 = '\t '
+DATA_TAB_2 = '\t\t '
+DATA_TAB_3 = '\t\t\t '
+DATA_TAB_4 = '\t\t\t\t '
+
+
 #biggest buffer size: 65535
 #65535 (0xFFFF) is the largest possible value that fits in an unsigned 16-bit integer.
 
@@ -15,7 +27,7 @@ def main():
     conn.bind((HOST, 0))
     conn.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
     
-    BUFFER_SIZE = 65535
+    
     print('Testing\n')
 
     while True:
