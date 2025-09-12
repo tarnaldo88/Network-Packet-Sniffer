@@ -48,4 +48,16 @@ def ipv4_packet(data):
 def ipv4(addr):
     return '.'.join(map(str,addr))
 
+#unpack ICMP
+def icmp_packet(data):
+    icmp_type, code, checksum = struct.unpack('! B B H', data[:4])
+    return icmp_type, code, checksum, data[4:]
+
+#unpack TCP
+def tcp_packet(data):
+    
+
+#unpack UDP
+def udp_packet(data):
+
 main()
