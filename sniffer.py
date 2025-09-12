@@ -45,11 +45,11 @@ def main():
             #ICMP
             if proto == 1:
                 icmp_type, code, checksum, data = icmp_packet(data)
-            elif proto == 6:
-                #tcp
+            #tcp
+            elif proto == 6:                
                 src_port, des_port, sequence, acknowledgement, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_segment(data)
-            elif proto == 17:
-                #UDP
+            #UDP
+            elif proto == 17:                
                 src_port, dest_port, size, data = udp_packet(data)
 
 
