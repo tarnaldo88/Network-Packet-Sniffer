@@ -42,6 +42,10 @@ def ipv4_packet(data):
     version = version_header_len >> 4
     header_length = (version_header_len & 15) * 4
     ttl, proto, src, target = struct.unpack('! 8x B B 2x 4s 4s', data[:20])
-    return version, header_length, ttl, proto, ipv4(src), target
+    return version, header_length, ttl, proto, ipv4(src), ipv4(target)
+
+def ipv4(src):
+    #placeholder for now
+    return 1
 
 main()
