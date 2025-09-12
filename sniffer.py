@@ -45,12 +45,25 @@ def main():
             #ICMP
             if proto == 1:
                 icmp_type, code, checksum, data = icmp_packet(data)
+                print(TAB_1 + 'ICMP Packet: ')
+                print(TAB_2 + 'Type: {}, Code: {}, Checksum: {}'.format(icmp_type,code,checksum))
+                print(TAB_2 + 'Data: ')
+                print(format_multi_line(DATA_TAB_3,data))
             #tcp
             elif proto == 6:                
                 src_port, des_port, sequence, acknowledgement, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_segment(data)
+                print(TAB_1 + 'TCP Packet: ')
+                print(TAB_2 + 'Source: {}, Destination: {}, sequence: {}, Acknowledgement: {}, flag: {}'.format(src_port,des_port,sequence, acknowledgement, flag_urg))
+                print(', ')
+                print(TAB_2 + 'Data: ')
+                print(format_multi_line(DATA_TAB_3,data))
             #UDP
             elif proto == 17:                
                 src_port, dest_port, size, data = udp_packet(data)
+                print(TAB_1 + 'UDP Packet: ')
+                print(TAB_2 + 'Source: {}, Destination: {}, Size: {}'.format(src_port,dest_port,size))
+                print(TAB_2 + 'Data: ')
+                print(format_multi_line(DATA_TAB_3,data))
 
 
 #unpack Ethernet frame
