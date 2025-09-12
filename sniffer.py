@@ -28,13 +28,18 @@ def main():
         
     while True:
         raw_data, addr = conn.recvfrom(BUFFER_SIZE)
-        dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
-        print('\nEthernet Frame: ')
-        print(TAB_1 + 'Dest: {} src: {} proto: {}'.format(dest_mac,src_mac,eth_proto))
+        # dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
+        # Since Windows raw sockets start with IP header, skip Ethernet parsing
+        (version, header_length, ttl, proto, src, target, data) = ipv4_packet(raw_data)
+        print('\nIPv4 Packet:')
+        print(TAB_2 + f'Version: {version}, Header Length: {header_length}, TTL: {ttl}')
+        print(TAB_3 + f'Protocol: {proto}, Source: {src}, Target: {target}')
+        # print('\nEthernet Frame: ')
+        # print(TAB_1 + 'Dest: {} src: {} proto: {}'.format(dest_mac,src_mac,eth_proto))
 
         # eth proto = 8 for IPv4
         if eth_proto == 8:
-            (version, header_length, ttl, proto, src, target, data) = ipv4_packet(data)
+            (version, header_length, ttl, proto, src, target, data) = ipv4_packet(raw_data)
             print(TAB_1 + 'IPv4 Packet: ')
             print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {}'.format(version,header_length,ttl))
             print(TAB_3 + 'Protocol: {}, Source: {}, Target: {}'.format(proto,src,target))
@@ -81,8 +86,20 @@ def ipv4_packet(data):
     #shift 4 bits to the right to get version
     version = version_header_len >> 4
     header_length = (version_header_len & 15) * 4
-    ttl, proto, src, target = struct.unpack('! 8x B B 2x 4s 4s', data[:20])
-    return version, header_length, ttl, proto, ipv4(src), ipv4(target), data[header_length:]
+    # ttl, proto, src, target = struct.unpack('! 8x B B 2x 4s 4s', data[:20])
+    total_length, identification, flags_fragment, ttl, proto, checksum, src, target = struct.unpack(
+        '! H H H B B H 4s 4s', data[:20]
+    )
+
+    return (
+        version,
+        header_length,
+        ttl,
+        proto,
+        socket.inet_ntoa(src),      # Converts 4-byte packed address to string
+        socket.inet_ntoa(target),   # Same for destination
+        data[header_length:]        # Payload
+    )
 
 #returns properly formatted IPv4 address
 def ipv4(addr):
