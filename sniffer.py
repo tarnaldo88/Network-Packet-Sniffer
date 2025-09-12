@@ -2,7 +2,10 @@ import socket
 import struct
 import textwrap
 
+#biggest buffer size: 65535
+#65535 (0xFFFF) is the largest possible value that fits in an unsigned 16-bit integer.
 BUFFER_SIZE = 65535
+
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
 TAB_3 = '\t\t\t - '
@@ -12,10 +15,6 @@ DATA_TAB_1 = '\t '
 DATA_TAB_2 = '\t\t '
 DATA_TAB_3 = '\t\t\t '
 DATA_TAB_4 = '\t\t\t\t '
-
-
-#biggest buffer size: 65535
-#65535 (0xFFFF) is the largest possible value that fits in an unsigned 16-bit integer.
 
 #listening for packets Loop
 def main():
@@ -34,7 +33,25 @@ def main():
         raw_data, addr = conn.recvfrom(BUFFER_SIZE)
         dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
         print('\nEthernet Frame: ')
-        print('Dest: {} src: {} proto: {}'.format(dest_mac,src_mac,eth_proto))
+        print(TAB_1 + 'Dest: {} src: {} proto: {}'.format(dest_mac,src_mac,eth_proto))
+
+        # eth proto = 8 for IPv4
+        if eth_proto == 8:
+            (version, header_length, ttl, proto, src, target, data) = ipv4_packet(data)
+            print(TAB_1 + 'IPv4 Packet: ')
+            print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {}'.format(version,header_length,ttl))
+            print(TAB_3 + 'Protocol: {}, Source: {}, Target: {}'.format(proto,src,target))
+            
+            #ICMP
+            if proto == 1:
+                icmp_type, code, checksum, data = icmp_packet(data)
+            elif proto == 6:
+                #tcp
+                src_port, des_port, sequence, acknowledgement, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_segment(data)
+            elif proto == 17:
+                #UDP
+                src_port, dest_port, size, data = udp_packet(data)
+
 
 #unpack Ethernet frame
 def ethernet_frame(data):
