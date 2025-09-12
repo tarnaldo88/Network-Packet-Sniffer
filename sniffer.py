@@ -25,10 +25,7 @@ def main():
     conn = socket.socket(socket.AF_INET, socket.SOCK_RAW)
     conn.bind((HOST, 0))
     conn.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
-    
-    
-    print('Testing\n')
-
+        
     while True:
         raw_data, addr = conn.recvfrom(BUFFER_SIZE)
         dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
@@ -53,8 +50,9 @@ def main():
             elif proto == 6:                
                 src_port, des_port, sequence, acknowledgement, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_segment(data)
                 print(TAB_1 + 'TCP Packet: ')
-                print(TAB_2 + 'Source: {}, Destination: {}, sequence: {}, Acknowledgement: {}, flag: {}'.format(src_port,des_port,sequence, acknowledgement, flag_urg))
-                print(', ')
+                print(TAB_2 + 'Source: {}, Destination: {}, sequence: {}, Acknowledgement: {}'.format(src_port,des_port,sequence, acknowledgement, flag_urg))
+                print(TAB_2 + 'Flags: ')
+                print(TAB_3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN: {}'.format(flag_urg,flag_ack,flag_psh,flag_syn,flag_fin))
                 print(TAB_2 + 'Data: ')
                 print(format_multi_line(DATA_TAB_3,data))
             #UDP
