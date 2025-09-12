@@ -35,5 +35,13 @@ def get_mac_addr(bytes_addr):
     #joins the pieces made in map above, and then uppercases them
     return ':'.join(bytes_str).upper()
 
+#Unpack IPv4 packet
+def ipv4_packet(data):
+    version_header_len = data[0]
+    #shift 4 bits to the right to get version
+    version = version_header_len >> 4
+    header_length = (version_header_len & 15) * 4
+    ttl, proto, src, target = struct.unpack('! 8x B B 2x 4s 4s', data[:20])
+    return version, header_length, ttl, proto, ipv4(src), target
 
 main()
