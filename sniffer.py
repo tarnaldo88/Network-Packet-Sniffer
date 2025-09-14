@@ -68,11 +68,11 @@ class PacketSnifferGUI:
         self.tree.column("info", width=260, anchor="w")
 
         # Colorize rows by protocol using tags
-        self.tree.tag_configure("TCP", background="#E3F2FD")   # light blue
-        self.tree.tag_configure("UDP", background="#E8F5E9")   # light green
-        self.tree.tag_configure("ICMP", background="#FFFDE7")  # light yellow
-        self.tree.tag_configure("ERR", background="#FFEBEE")   # light red for errors
-        self.tree.tag_configure("OTHER", background="#F5F5F5") # light gray
+        self.tree.tag_configure("TCP", background="#9BCDF3")   # light blue
+        self.tree.tag_configure("UDP", background="#c5f3ca")   # light green
+        self.tree.tag_configure("ICMP", background="#f5eeae")  # light yellow
+        self.tree.tag_configure("ERR", background="#fbc0c9")   # light red for errors
+        self.tree.tag_configure("OTHER", background="#dad7d8") # light gray
 
         vsb = ttk.Scrollbar(self.root, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=vsb.set)
